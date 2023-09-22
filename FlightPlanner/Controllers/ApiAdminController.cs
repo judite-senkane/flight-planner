@@ -31,9 +31,21 @@ namespace FlightPlanner.Controllers
         {
             try
             {
-               _storage.AddFlight(flight);
+                _storage.AddFlight(flight);
             }
-            catch (DuplicateFlightException e)
+            catch (InvalidFlightException)
+            {
+                return BadRequest();
+            }
+            catch (EmptyValueException)
+            {
+                return BadRequest();
+            }
+            catch (InvalidDatesException)
+            {
+                return BadRequest();
+            }
+            catch (DuplicateFlightException)
             {
                 return Conflict();
             }
