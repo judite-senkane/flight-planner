@@ -46,5 +46,17 @@ namespace FlightPlanner.Storage
         {
             _flightStorage.Clear();
         }
+
+        public Airport[] GetAirport(string searchPhrase)
+        {
+            searchPhrase = searchPhrase.ToUpper().Trim();
+            var airport = _flightStorage
+                .SelectMany(f => new[] { f.From, f.To }).ToHashSet()
+                .Where(a => a.AirportCode.ToUpper().StartsWith(searchPhrase) || 
+                    a.Country.ToUpper().StartsWith(searchPhrase) || a.City.ToUpper()
+                        .StartsWith(searchPhrase)).ToArray();
+
+           return airport;
+        }
     }
 }
