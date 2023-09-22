@@ -10,12 +10,7 @@ namespace FlightPlanner.Controllers
     [ApiController]
     public class CustomerApiController : ControllerBase
     {
-        private readonly FlightStorage _storage;
-
-        public CustomerApiController()
-        {
-            _storage = new FlightStorage();
-        }
+        private readonly FlightStorage _storage = new();
 
         [Route("airports")]
         [HttpGet]
@@ -52,6 +47,7 @@ namespace FlightPlanner.Controllers
         public IActionResult SearchFlightById(int id)
         {
             var flight = _storage.SearchFlightById(id);
+
             if (flight == null) return NotFound();
             return Ok(flight);
         }

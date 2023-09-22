@@ -14,7 +14,8 @@ namespace FlightPlanner.Storage
             {
                 throw new InvalidFlightException();
             }
-            else if (string.IsNullOrEmpty(flight.From.Country) || string.IsNullOrEmpty(flight.From.City) ||
+
+            if (string.IsNullOrEmpty(flight.From.Country) || string.IsNullOrEmpty(flight.From.City) ||
                 string.IsNullOrEmpty(flight.From.AirportCode) || string.IsNullOrEmpty(flight.To.Country) ||
                 string.IsNullOrEmpty(flight.To.City) || string.IsNullOrEmpty(flight.To.AirportCode) ||
                 string.IsNullOrEmpty(flight.Carrier) || string.IsNullOrEmpty(flight.DepartureTime) ||
@@ -22,14 +23,17 @@ namespace FlightPlanner.Storage
             {
                 throw new EmptyValueException();
             }
-            else if (_flightStorage.Any(f => f.From.AirportCode == flight.From.AirportCode && f.To.AirportCode == flight.To.AirportCode && f.DepartureTime == flight.DepartureTime && f.ArrivalTime == flight.ArrivalTime))
+
+            if (_flightStorage.Any(f => f.From.AirportCode == flight.From.AirportCode && f.To.AirportCode == flight.To.AirportCode && f.DepartureTime == flight.DepartureTime && f.ArrivalTime == flight.ArrivalTime))
             {
                 throw new DuplicateFlightException();
             }
-            else if (DateTime.Parse(flight.DepartureTime) >= DateTime.Parse(flight.ArrivalTime))
+
+            if (DateTime.Parse(flight.DepartureTime) >= DateTime.Parse(flight.ArrivalTime))
             {
                 throw new InvalidDatesException();
             }
+
             flight.Id = _id++;
             _flightStorage.Add(flight);
         }
@@ -74,7 +78,7 @@ namespace FlightPlanner.Storage
             var airportTo = GetAirport(request.To);
             var flights = _flightStorage.Where(f => f.From.AirportCode == airportFrom[0].AirportCode 
                                                             && f.To.AirportCode == airportTo[0].AirportCode 
-                                                            && DateTime.Parse(f.DepartureTime).Date.ToString() == request.DepartureDate).ToArray();
+                                                            && f.DepartureTime.StartsWith(request.DepartureDate)).ToArray();
 
             return flights;
         }
