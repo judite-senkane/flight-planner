@@ -36,6 +36,12 @@ namespace FlightPlanner.Storage
             _flightStorage.Add(flight);
         }
 
+        public void DeleteFlight(int id)
+        {
+            var flight = _flightStorage.FirstOrDefault(f => f.Id == id);
+            _flightStorage.Remove(flight);
+        }
+
         public void ClearFlights()
         {
             _flightStorage.Clear();
