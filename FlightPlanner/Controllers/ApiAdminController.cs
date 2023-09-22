@@ -22,7 +22,9 @@ namespace FlightPlanner.Controllers
         [HttpGet]
         public IActionResult GetFlight(int id)
         {
-            return NotFound();
+            var flight = _storage.SearchFlightById(id);
+            if (flight == null) return NotFound();
+            return Ok(flight);
         }
 
         [Route("flights")]
