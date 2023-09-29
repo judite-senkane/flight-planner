@@ -7,7 +7,12 @@ namespace FlightPlanner.Controllers
     [ApiController]
     public class CleanupApiController: ControllerBase
     {
-        private readonly FlightStorage _storage = new();
+        private readonly FlightStorage _storage;
+
+        public CleanupApiController(FlightStorage storage)
+        {
+            _storage = storage;
+        }
 
         [Route("clear")]
         [HttpPost]

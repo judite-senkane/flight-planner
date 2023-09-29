@@ -11,15 +11,22 @@ namespace FlightPlanner.Controllers
     [ApiController]
     public class ApiAdminController : ControllerBase
     {
-        private readonly FlightStorage _storage = new();
+        private readonly FlightStorage _storage;
         private static readonly object _controllerLock = new();
+
+        public ApiAdminController(FlightStorage storage)
+        {
+            _storage = storage;
+        }
 
         [Route("flights/{id}")]
         [HttpGet]
         public IActionResult GetFlight(int id)
         {
             var flight = _storage.SearchFlightById(id);
+
             if (flight == null) return NotFound();
+
             return Ok(flight);
         }
 
@@ -31,7 +38,7 @@ namespace FlightPlanner.Controllers
             {
                 lock (_controllerLock)
                 {
-                    _storage.AddFlight(flight);
+                   _storage.AddFlight(flight);
                 }
             }
             catch (InvalidFlightException)
@@ -61,6 +68,7 @@ namespace FlightPlanner.Controllers
             lock (_controllerLock)
             {
                 _storage.DeleteFlight(id);
+
                 return Ok();
             }
         }
