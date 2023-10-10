@@ -1,7 +1,6 @@
 ﻿using FlightPlanner.Exceptions;
 using FlightPlanner.Models;
 using FlightPlanner.Storage;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightPlanner.Controllers
@@ -10,7 +9,12 @@ namespace FlightPlanner.Controllers
     [ApiController]
     public class CustomerApiController : ControllerBase
     {
-        private readonly FlightStorage _storage = new();
+        private readonly FlightStorage _storage;
+
+        public CustomerApiController(FlightStorage storage)
+        {
+            _storage = storage;
+        }
 
         [Route("airports")]
         [HttpGet]
@@ -49,6 +53,7 @@ namespace FlightPlanner.Controllers
             var flight = _storage.SearchFlightById(id);
 
             if (flight == null) return NotFound();
+
             return Ok(flight);
         }
     }
