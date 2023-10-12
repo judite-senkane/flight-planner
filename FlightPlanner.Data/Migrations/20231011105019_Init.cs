@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace FlightPlanner.Migrations
+namespace FlightPlanner.Data.Migrations
 {
     /// <inheritdoc />
     public partial class Init : Migration
@@ -33,9 +33,9 @@ namespace FlightPlanner.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FromId = table.Column<int>(type: "int", nullable: false),
                     ToId = table.Column<int>(type: "int", nullable: false),
-                    Carrier = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DepartureTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ArrivalTime = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Carrier = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    DepartureTime = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    ArrivalTime = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
                 },
                 constraints: table =>
                 {

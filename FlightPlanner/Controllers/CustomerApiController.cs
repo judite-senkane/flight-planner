@@ -1,6 +1,6 @@
-﻿using FlightPlanner.Exceptions;
+﻿using FlightPlanner.Core.Models;
+using FlightPlanner.Exceptions;
 using FlightPlanner.Models;
-using FlightPlanner.Storage;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightPlanner.Controllers
@@ -9,18 +9,18 @@ namespace FlightPlanner.Controllers
     [ApiController]
     public class CustomerApiController : ControllerBase
     {
-        private readonly FlightStorage _storage;
+        //private readonly FlightStorage _storage;
 
-        public CustomerApiController(FlightStorage storage)
-        {
-            _storage = storage;
-        }
+        //public CustomerApiController(FlightStorage storage)
+        //{
+        //    _storage = storage;
+        //}
 
         [Route("airports")]
         [HttpGet]
         public IActionResult GetAirport(string search)
         {
-            var airport = _storage.GetAirport(search);
+            Airport airport = null; //_storage.GetAirport(search);
             return Ok(airport);
         }
 
@@ -31,7 +31,7 @@ namespace FlightPlanner.Controllers
             Flight[] flights;
             try
             {
-                flights = _storage.SearchFlights(request);
+                flights = Array.Empty<Flight>(); // _storage.SearchFlights(request);
             }
             catch (EmptyValueException)
             {
@@ -50,7 +50,7 @@ namespace FlightPlanner.Controllers
         [HttpGet]
         public IActionResult SearchFlightById(int id)
         {
-            var flight = _storage.SearchFlightById(id);
+            Flight flight = null; // _storage.SearchFlightById(id);
 
             if (flight == null) return NotFound();
 
