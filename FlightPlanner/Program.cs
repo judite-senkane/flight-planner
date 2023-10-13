@@ -29,6 +29,8 @@ namespace FlightPlanner
             builder.Services.AddTransient<IEntityService<Flight>, EntityService<Flight>>();
             builder.Services.AddTransient<IFlightService, FlightService>();
             builder.Services.AddTransient<ICleanupService, CleanupService>();
+            var mapper = AutoMapperConfig.CreateMapper();
+            builder.Services.AddSingleton(mapper);
             builder.Services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 

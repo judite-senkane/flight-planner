@@ -1,4 +1,5 @@
-﻿using FlightPlanner.Core.Models;
+﻿using AutoMapper;
+using FlightPlanner.Core.Models;
 using FlightPlanner.Core.Services;
 using FlightPlanner.Exceptions;
 using FlightPlanner.Models;
@@ -13,11 +14,13 @@ namespace FlightPlanner.Controllers
     public class ApiAdminController : ControllerBase
     {
         private readonly IFlightService _flightService;
+        private readonly IMapper _mapper;
         private static readonly object _controllerLock = new();
 
-        public ApiAdminController(IFlightService flightService)
+        public ApiAdminController(IFlightService flightService, IMapper mapper)
         {
             _flightService = flightService;
+            _mapper = mapper;
         }
 
         [Route("flights/{id}")]
@@ -28,14 +31,14 @@ namespace FlightPlanner.Controllers
 
             if (flight == null) return NotFound();
 
-            return Ok(flight);
+            return Ok(_mapper.Map<FlightRequest>(flight));
         }
 
         [Route("flights")]
         [HttpPut]
         public IActionResult AddFlight(FlightRequest request)
         {
-            var flight = MapToFlight(request);
+            var flight = _mapper.Map<Flight>(request);
             try
             {
                 lock (_controllerLock)
@@ -60,7 +63,7 @@ namespace FlightPlanner.Controllers
                 return Conflict();
             }
 
-            request = MapToFlightRequest(flight);
+            request = _mapper.Map<FlightRequest>(flight);
 
             return Created("", request);
         }
@@ -76,52 +79,6 @@ namespace FlightPlanner.Controllers
 
                 return Ok();
             }
-        }
-
-        private Flight MapToFlight (FlightRequest request)
-        {
-            return new Flight
-            {
-                Id = request.Id,
-                ArrivalTime = request.ArrivalTime,
-                Carrier = request.Carrier,
-                DepartureTime = request.DepartureTime,
-                From = new Airport
-                {
-                    City = request.From.City,
-                    Country = request.From.Country,
-                    AirportCode = request.From.Airport
-                },
-                To = new Airport
-                {
-                    City = request.To.City,
-                    Country = request.To.Country,
-                    AirportCode = request.To.Airport
-                }
-            };
-        }
-        
-        private FlightRequest MapToFlightRequest (Flight flight)
-        {
-            return new FlightRequest
-            {
-                Id = flight.Id,
-                ArrivalTime = flight.ArrivalTime,
-                Carrier = flight.Carrier,
-                DepartureTime = flight.DepartureTime,
-                From = new AirportRequest
-                {
-                    City = flight.From.City,
-                    Country = flight.From.Country,
-                    Airport = flight.From.AirportCode
-                },
-                To = new AirportRequest 
-                {
-                   City = flight.To.City,
-                   Country = flight.To.Country,
-                   Airport = flight.To.AirportCode
-                }
-            };
         }
     }
 }

@@ -51,10 +51,4 @@ public class DbService : IDbService
         _context.Entry(entity).State = EntityState.Modified;
         _context.SaveChanges();
     }
-
-    public void DeleteRange<T>() where T : Entity
-    {
-        _context.Set<T>().RemoveRange(_context.Set<T>());
-        _context.SaveChanges();
-    }
 }
