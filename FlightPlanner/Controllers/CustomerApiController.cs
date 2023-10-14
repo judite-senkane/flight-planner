@@ -1,5 +1,4 @@
 ﻿using FlightPlanner.Core.Models;
-using FlightPlanner.Exceptions;
 using FlightPlanner.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,19 +28,9 @@ namespace FlightPlanner.Controllers
         public IActionResult SearchFlights(SearchFlightRequest request)
         {
             Flight[] flights;
-            try
-            {
-                flights = Array.Empty<Flight>(); // _storage.SearchFlights(request);
-            }
-            catch (EmptyValueException)
-            {
-                return BadRequest();
-            }
-            catch (InvalidFlightException)
-            {
-                return BadRequest();
-            }
-
+            
+            flights = Array.Empty<Flight>(); // _storage.SearchFlights(request);
+            
             return Ok(new PageResult(flights));
         }
         

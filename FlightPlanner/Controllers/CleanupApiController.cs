@@ -18,7 +18,7 @@ namespace FlightPlanner.Controllers
 
         [Route("clear")]
         [HttpPost]
-        public IActionResult Clear()
+        public IActionResult ClearFlights()
         {
             _cleanupService.ClearDatabase();
             return Ok();

@@ -1,9 +1,9 @@
 
-using FlightPlanner.Core.Models;
-using FlightPlanner.Core.Services;
+using FlightPlanner.Core.Interfaces;
 using FlightPlanner.Data;
 using FlightPlanner.Handlers;
-using FlightPlanner.Services;
+using FlightPlanner.Services.Extensions;
+using FlightPlanner.Validations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,11 +24,11 @@ namespace FlightPlanner
             builder.Services.AddDbContext<FlightPlannerDbContext>(options => 
                 options.UseSqlServer(builder.Configuration
                     .GetConnectionString("flight-planner")));
-            builder.Services.AddTransient<IDbService, DbService>();
-            builder.Services.AddTransient<IEntityService<Airport>, EntityService<Airport>>();
-            builder.Services.AddTransient<IEntityService<Flight>, EntityService<Flight>>();
-            builder.Services.AddTransient<IFlightService, FlightService>();
-            builder.Services.AddTransient<ICleanupService, CleanupService>();
+            builder.Services.RegisterServices();
+            builder.Services.AddTransient<IValidate, AirportValuesValidator>();
+            builder.Services.AddTransient<IValidate, FlightDatesValidator>();
+            builder.Services.AddTransient<IValidate, FlightValuesValidator>();
+            builder.Services.AddTransient<IValidate, SameAirportValidator>();
             var mapper = AutoMapperConfig.CreateMapper();
             builder.Services.AddSingleton(mapper);
             builder.Services.AddAuthentication("BasicAuthentication")

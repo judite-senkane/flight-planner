@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using FlightPlanner.Core.Interfaces;
 using FlightPlanner.Core.Models;
 using FlightPlanner.Core.Services;
-using FlightPlanner.Exceptions;
 using FlightPlanner.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +15,14 @@ namespace FlightPlanner.Controllers
     {
         private readonly IFlightService _flightService;
         private readonly IMapper _mapper;
+        private readonly IEnumerable<IValidate> _validators;
         private static readonly object _controllerLock = new();
 
-        public ApiAdminController(IFlightService flightService, IMapper mapper)
+        public ApiAdminController(IFlightService flightService, IMapper mapper, IEnumerable<IValidate> validators)
         {
             _flightService = flightService;
             _mapper = mapper;
+            _validators = validators;
         }
 
         [Route("flights/{id}")]
@@ -39,28 +41,20 @@ namespace FlightPlanner.Controllers
         public IActionResult AddFlight(FlightRequest request)
         {
             var flight = _mapper.Map<Flight>(request);
-            try
-            {
-                lock (_controllerLock)
-                {
-                    _flightService.Create(flight);
-                }
-            }
-            catch (InvalidFlightException)
+
+            if (!_validators.All(v => v.IsValid(flight)))
             {
                 return BadRequest();
             }
-            catch (EmptyValueException)
-            {
-                return BadRequest();
-            }
-            catch (InvalidDatesException)
-            {
-                return BadRequest();
-            }
-            catch (DuplicateFlightException)
+
+            if (_flightService.Exists(flight))
             {
                 return Conflict();
+            }
+                
+            lock (_controllerLock)
+            {
+                _flightService.Create(flight);
             }
 
             request = _mapper.Map<FlightRequest>(flight);
