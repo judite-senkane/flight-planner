@@ -19,6 +19,15 @@ public class FlightService : EntityService<Flight>, IFlightService
             .SingleOrDefault(f => f.Id == id);
     }
 
+    public Flight[] SearchFlights(Flight flightSearch)
+    {
+        var result = _context.Flights.Where(f => f.DepartureTime.StartsWith(flightSearch.DepartureTime) &&
+                                    f.From.AirportCode.ToLower() == flightSearch.From.AirportCode.Trim().ToLower() &&
+                                    f.To.AirportCode.ToLower() == flightSearch.To.AirportCode.Trim().ToLower()).ToArray();
+
+        return result;
+    }
+
     public bool Exists(Flight flight)
     {
         return _context.Flights.Any(f => f.ArrivalTime == flight.ArrivalTime &&

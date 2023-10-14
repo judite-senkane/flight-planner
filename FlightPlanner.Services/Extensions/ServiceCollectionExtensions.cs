@@ -15,5 +15,6 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IEntityService<Flight>, EntityService<Flight>>();
         services.AddTransient<IFlightService, FlightService>();
         services.AddTransient<ICleanupService, CleanupService>();
+        services.AddTransient<IAirportService, AirportService>();
     }
 }

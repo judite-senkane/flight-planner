@@ -42,18 +42,18 @@ namespace FlightPlanner.Controllers
         {
             var flight = _mapper.Map<Flight>(request);
 
-            if (!_validators.All(v => v.IsValid(flight)))
-            {
-                return BadRequest();
-            }
-
-            if (_flightService.Exists(flight))
-            {
-                return Conflict();
-            }
-                
             lock (_controllerLock)
             {
+                if (!_validators.All(v => v.IsValid(flight)))
+                {
+                    return BadRequest();
+                }
+
+                if (_flightService.Exists(flight))
+                {
+                    return Conflict();
+                }
+
                 _flightService.Create(flight);
             }
 
@@ -69,7 +69,7 @@ namespace FlightPlanner.Controllers
             lock (_controllerLock)
             {
                 var flight = _flightService.GetFullFlightById(id);
-                _flightService.Delete(flight);
+                if (flight != null) _flightService.Delete(flight);
 
                 return Ok();
             }

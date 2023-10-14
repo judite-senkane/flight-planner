@@ -29,6 +29,8 @@ namespace FlightPlanner
             builder.Services.AddTransient<IValidate, FlightDatesValidator>();
             builder.Services.AddTransient<IValidate, FlightValuesValidator>();
             builder.Services.AddTransient<IValidate, SameAirportValidator>();
+            builder.Services.AddTransient<IValidateSearch, SearchFlightRequestSameAirportsValidator>();
+            builder.Services.AddTransient<IValidateSearch, SearchRequestValuesValidator>();
             var mapper = AutoMapperConfig.CreateMapper();
             builder.Services.AddSingleton(mapper);
             builder.Services.AddAuthentication("BasicAuthentication")
