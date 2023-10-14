@@ -5,7 +5,7 @@ namespace FlightPlanner.Services;
 
 public class CleanupService : DbService, ICleanupService
 {
-    public CleanupService(FlightPlannerDbContext context) : base(context)
+    public CleanupService(IFlightPlannerDbContext context) : base(context)
     {
     }
 
