@@ -42,9 +42,7 @@ public class CustomerApiController : ControllerBase
     {
         if (!_validators.All(v => v.IsValid(request))) return BadRequest();
 
-        var flight = MapToFlight(request);
-
-        Flight[] flights = _flightService.SearchFlights(flight);
+        Flight[] flights = _flightService.SearchFlights(request);
             
         return Ok(new PageResult(flights));
     }
@@ -62,15 +60,5 @@ public class CustomerApiController : ControllerBase
         var result = _mapper.Map<FlightRequest>(flight);
 
         return Ok(result);
-    }
-
-    private Flight MapToFlight(SearchFlightRequest request)
-    {
-        return new Flight
-        {
-            DepartureTime = request.DepartureDate,
-            From = new Airport { AirportCode = request.From.Trim().ToUpper() },
-            To = new Airport { AirportCode = request.To.Trim().ToUpper() }
-        };
     }
 }
